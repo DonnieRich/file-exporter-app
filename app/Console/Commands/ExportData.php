@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Product;
 use App\Support\ExportManager;
 
 class ExportData extends Command
@@ -13,14 +12,16 @@ class ExportData extends Command
      *
      * @var string
      */
-    protected $signature = 'product:export {type} {--filename=}';
+    protected $signature = 'data:export
+                            {type : The export format: XML, CSV}
+                            {class : The class to export: Product, User}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Export products data in the given format';
+    protected $description = 'Export selected data in the given format';
 
     /**
      * Execute the console command.
@@ -29,7 +30,7 @@ class ExportData extends Command
      */
     public function handle()
     {
-        $result = ExportManager::export($this->argument('type'), $this->option('filename'))->download();
+        $result = ExportManager::export($this->argument('type'), $this->argument('class'))->download();
         $this->info($result);
     }
 }

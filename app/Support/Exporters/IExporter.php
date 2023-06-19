@@ -4,5 +4,6 @@ namespace App\Support\Exporters;
 
 interface IExporter
 {
-    public function export($filename);
+    // public function prepareExport($model);
+    public function export($model);
 }

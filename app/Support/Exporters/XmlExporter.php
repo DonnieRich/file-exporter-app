@@ -3,23 +3,33 @@
 namespace App\Support\Exporters;
 
 use App\Support\Exporters\IExporter;
-use App\Models\Product;
+use Illuminate\Support\Pluralizer;
 
 class XmlExporter implements IExporter
 {
     public static $filetype = "XML";
-    private $products;
+    private $items;
+    private $model;
 
-    public function __construct($_products)
+    public function __construct($_items)
     {
-        $this->products = $_products;
+        $this->items = $_items;
     }
 
-    public function export($filename)
-    {
-        $filename = $filename ? $filename . "." . static::$filetype : "default." . static::$filetype;
+    // public function prepareExport($model)
+    // {
+    //     $this->model = ucfirst(Pluralizer::plural($model));
 
-        echo "{$this->products->count()} Products exported in " . static::$filetype . " format, inside $filename";
+    //     echo "Preparing export of {$this->model}";
+    //     echo "\n";
+
+    //     return $this;
+    // }
+
+    public function export($model)
+    {
+        $model = ucfirst(Pluralizer::plural($model));
+        echo "{$this->items->count()} {$model} exported in " . static::$filetype . " format";
         echo "\n";
 
         return $this;
