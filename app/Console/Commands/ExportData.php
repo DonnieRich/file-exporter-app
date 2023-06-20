@@ -30,7 +30,7 @@ class ExportData extends Command
      */
     public function handle()
     {
-        $result = ExportManager::export($this->argument('type'), $this->argument('class'))->download();
-        $this->info($result);
+        $export = ExportManager::export($this->argument('type'), $this->argument('class'))->save();
+        ExportManager::sendReport($export->lastExportId);
     }
 }

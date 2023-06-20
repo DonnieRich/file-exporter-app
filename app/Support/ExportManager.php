@@ -10,32 +10,61 @@ class ExportManager
 {
     use ForwardsCalls;
 
+    /**
+     * Dynamically instantiate the exporter
+     * 
+     * @param string $type the Exporter type (i.e. Csv)
+     * @param string $model the model to use in the export (i.e. Product)
+     * 
+     * @return mixed an instance of the exporter (i.e. CsvExporter, XmlExporter, etc...)
+     */
     private function getExporter($type, $model)
     {
         try {
+
+            // $type = Csv -> App\Support\Exporters\CsvExoporter
             $exporter = "App\\Support\\Exporters\\{$type}Exporter";
+
+            // $model = Product -> App\Models\Product
             $data = "App\\Models\\{$model}";
-            return new $exporter($data::all());
+
+            // new App\Support\Exporters\CsvExoporter(App\Models\Product)
+            return new $exporter($data);
         } catch (Error | Exception $e) {
             throw $e;
         }
     }
 
-    public function download()
+    /**
+     * List all reports
+     */
+    public static function list()
     {
-        return "Dowloading last export";
+        echo "Listing all exports";
+    }
+
+    /**
+     * Get the selected report and send it to the administrator email
+     * 
+     * @param int $id the ID of the export
+     */
+    public static function sendReport($id)
+    {
+        echo "Retrieving export number {$id}\n";
+        echo "Sending selected export to administrator\n";
     }
 
     public function __call($method, $parameters)
     {
         // removing the first element because it's the export format
-        $type = ucfirst(strtolower(array_shift($parameters)));
+        // csv -> Csv
+        $type = ucfirst(strtolower($parameters[0]));
 
         // retrieving the model
-        $model = ucfirst(strtolower($parameters[0]));
+        $model = ucfirst(strtolower($parameters[1]));
 
+        // forward the method call to the exporter instance
         return $this->forwardCallTo($this->getExporter($type, $model), $method, $parameters);
-        // return $this->forwardDecoratedCallTo($this->getExporter($type, $model), $method, $parameters);
     }
 
     public static function __callStatic($method, $parameters)

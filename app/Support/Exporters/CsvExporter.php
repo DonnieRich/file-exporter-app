@@ -10,26 +10,36 @@ class CsvExporter implements IExporter
     public static $filetype = "CSV";
     private $items;
     private $model;
+    public $lastExportId;
 
-    public function __construct($_items)
+    public function __construct($_model)
     {
-        $this->items = $_items;
+        $this->model = $_model;
     }
 
-    // public function prepareExport($model)
-    // {
-    //     $this->model = ucfirst(Pluralizer::plural($model));
-
-    //     echo "Preparing export of {$this->model}";
-    //     echo "\n";
-
-    //     return $this;
-    // }
-
-    public function export($model)
+    public function prepareExport()
     {
-        $model = ucfirst(Pluralizer::plural($model));
-        echo "{$this->items->count()} {$model} exported in " . static::$filetype . " format";
+        $this->items = $this->model::all();
+
+        echo "Preparing export of " . get_class(new $this->model);
+        echo "\n";
+    }
+
+    public function export()
+    {
+        $this->prepareExport();
+
+        echo "{$this->items->count()} records exported in " . static::$filetype . " format";
+        echo "\n";
+
+        return $this;
+    }
+
+    public function save()
+    {
+        $this->lastExportId = rand(1, 1305);
+
+        echo "Export n. {$this->lastExportId} saved inside database";
         echo "\n";
 
         return $this;
