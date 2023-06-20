@@ -36,7 +36,7 @@ class ExportManager
     }
 
     /**
-     * List all reports
+     * List all export
      */
     public static function list()
     {
@@ -44,11 +44,11 @@ class ExportManager
     }
 
     /**
-     * Get the selected report and send it to the administrator email
+     * Get the selected export and send it to the administrator email
      * 
      * @param int $id the ID of the export
      */
-    public static function sendReport($id)
+    public static function sendExport($id)
     {
         echo "Retrieving export number {$id}\n";
         echo "Sending selected export to administrator\n";
